@@ -9,3 +9,11 @@ extract-cert
 sign-file
 insert-sys-cert
 /module.lds
+
+# filter out generated files
+.*
+*.o
+*.o.*
+*.lex.c
+*.tab.c
+*.tab.h
