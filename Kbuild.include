@@ -148,22 +148,22 @@ ld-ifversion = $(shell [ $(CONFIG_LD_VERSION)0 $(1) $(2)0 ] && echo $(3) || echo
 ######
 
 ###
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.build obj=
+# Shorthand for $(Q)$(MAKE) -f kmake/Makefile.build obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
-build := -f $(srctree)/scripts/Makefile.build obj
+build := -f $(srctree)/kmake/Makefile.build obj
 
 ###
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.dtbinst obj=
+# Shorthand for $(Q)$(MAKE) -f kmake/Makefile.dtbinst obj=
 # Usage:
 # $(Q)$(MAKE) $(dtbinst)=dir
-dtbinst := -f $(srctree)/scripts/Makefile.dtbinst obj
+dtbinst := -f $(srctree)/kmake/Makefile.dtbinst obj
 
 ###
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.clean obj=
+# Shorthand for $(Q)$(MAKE) -f kmake/Makefile.clean obj=
 # Usage:
 # $(Q)$(MAKE) $(clean)=dir
-clean := -f $(srctree)/scripts/Makefile.clean obj
+clean := -f $(srctree)/kmake/Makefile.clean obj
 
 # echo command.
 # Short version is used, if $(quiet) equals `quiet_', otherwise full one.
@@ -215,7 +215,7 @@ if_changed_dep = $(if $(newer-prereqs)$(cmd-check),$(cmd_and_fixdep),@:)
 
 cmd_and_fixdep =                                                             \
 	$(cmd);                                                              \
-	scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).cmd;\
+	kmake/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).cmd;\
 	rm -f $(depfile)
 
 # Usage: $(call if_changed_rule,foo)
