@@ -397,7 +397,7 @@ endif
 #
 
 quiet_cmd_ar_builtin = AR      $@
-      cmd_ar_builtin = rm -f $@; $(AR) cDPrST $@ $(real-prereqs)
+      cmd_ar_builtin = rm -f $@; $(AR) cDPrsT $@ $(real-prereqs)
 
 quiet_cmd_ar_and_symver = AR      $@
       cmd_ar_and_symver = $(cmd_update_lto_symversions); $(cmd_ar_builtin)
