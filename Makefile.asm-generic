@@ -17,7 +17,7 @@ ifneq ($(SRCARCH),um)
 include $(generic)/Kbuild
 endif
 
-include scripts/Kbuild.include
+include kmake/Kbuild.include
 
 redundant := $(filter $(mandatory-y) $(generated-y), $(generic-y))
 redundant += $(foreach f, $(generic-y), $(if $(wildcard $(srctree)/$(src)/$(f)),$(f)))
