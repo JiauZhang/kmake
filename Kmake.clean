@@ -1,0 +1,29 @@
+clean-dirs := $(addprefix _clean_, $(clean-dirs))
+PHONY += $(clean-dirs) clean
+$(clean-dirs):
+	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
+
+quiet_cmd_rmfiles = $(if $(wildcard $(rm-files)),CLEAN   $(wildcard $(rm-files)))
+      cmd_rmfiles = rm -rf $(rm-files)
+
+export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
+			  -name CVS -o -name .pc -o -name .hg -o -name .git \) \
+			  -prune -o
+
+clean: $(clean-dirs)
+	$(call cmd,rmfiles)
+	@find $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
+		\( -name '*.[aios]' -o -name '*.ko' -o -name '.*.cmd' \
+		-o -name '*.ko.*' \
+		-o -name '*.dtb' -o -name '*.dtbo' -o -name '*.dtb.S' -o -name '*.dt.yaml' \
+		-o -name '*.dwo' -o -name '*.lst' \
+		-o -name '*.su' -o -name '*.mod' \
+		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
+		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
+		-o -name '*.asn1.[ch]' \
+		-o -name '*.symtypes' -o -name 'modules.order' \
+		-o -name '.tmp_*.o.*' \
+		-o -name '*.c.[012]*.*' \
+		-o -name '*.ll' \
+		-o -name '*.gcno' \
+		-o -name '*.*.symversions' \) -type f -print | xargs rm -f

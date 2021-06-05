@@ -1,0 +1,25 @@
+MAKEFLAGS += -rR --no-print-directory
+
+ifeq ("$(origin V)", "command line")
+  KBUILD_VERBOSE = $(V)
+endif
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE = 0
+endif
+
+ifeq ($(KBUILD_VERBOSE),1)
+  quiet =
+  Q =
+else
+  quiet=quiet_
+  Q = @
+endif
+
+# If the user is running make -s (silent mode), suppress echoing of
+# commands
+ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
+  quiet=silent_
+  KBUILD_VERBOSE = 0
+endif
+
+export quiet Q KBUILD_VERBOSE
