@@ -1,3 +1,5 @@
+ifndef config-build # !config-build
+
 clean-dirs := $(addprefix _clean_, $(clean-dirs))
 PHONY += $(clean-dirs) clean
 $(clean-dirs):
@@ -27,3 +29,5 @@ clean: $(clean-dirs)
 		-o -name '*.ll' \
 		-o -name '*.gcno' \
 		-o -name '*.*.symversions' \) -type f -print | xargs rm -f
+
+endif # config-build

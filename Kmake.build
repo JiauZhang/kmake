@@ -1,0 +1,44 @@
+ifndef config-build # !config-build
+
+-include include/config/auto.conf
+
+# add arch specific subdirs
+ifneq ($(ARCH_MAKEFILE),)
+include $(ARCH_MAKEFILE)
+endif
+
+build-dirs := $(patsubst %/,%,$(core-y) $(drivers-y) $(libs-y))
+build-objs := $(patsubst %/,%/built-in.a,$(core-y) $(drivers-y) $(libs-y))
+build-objs := $(head-y) $(build-objs)
+
+clean-dirs := $(sort $(build-dirs) $(patsubst %/,%,$(filter %/, $(core-) $(drivers-) $(libs-))))
+
+$(build-objs): $(build-dirs)
+
+kmake-example: $(build-objs)
+	@echo "  CC      $@"
+	$(Q)$(CC) $(build-objs) -o $@
+
+PHONY += $(build-dirs)
+$(build-dirs): prepare
+	$(Q)$(MAKE) $(build)=$@ need-builtin=1
+
+quiet_cmd_syncconfig = SYNC    $@
+      cmd_syncconfig = $(MAKE) -f $(srctree)/Makefile syncconfig
+
+%/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
+	+$(call cmd,syncconfig)
+
+$(KCONFIG_CONFIG):
+	@echo >&2 '***'
+	@echo >&2 '*** Configuration file "$@" not found!'
+	@echo >&2 '***'
+	@echo >&2 '*** Please run some configurator (e.g. "make oldconfig" or'
+	@echo >&2 '*** "make menuconfig" or "make xconfig").'
+	@echo >&2 '***'
+	@/bin/false
+
+PHONY += prepare
+prepare: include/generated/autoconf.h
+
+endif # config-build
