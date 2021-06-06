@@ -34,3 +34,6 @@ libs-y :=
 
 KCONFIG_CONFIG ?= .config
 export KCONFIG_CONFIG
+
+# Look for make include files relative to root of FiBot src
+MAKEFLAGS += --include-dir=$(srctree)

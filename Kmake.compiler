@@ -12,14 +12,24 @@ SRCARCH     := $(ARCH)
 # SHELL used by kbuild
 CONFIG_SHELL := sh
 
-HOSTCC       = gcc
-HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS = -O2
+ifneq ($(LLVM),)
+HOSTCC	= clang
+HOSTCXX	= clang++
+else
+HOSTCC	= gcc
+HOSTCXX	= g++
+endif
 
 export KBUILD_USERCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
 			      -O2 -fomit-frame-pointer -std=gnu89
 export KBUILD_USERLDFLAGS :=
+
+KBUILD_HOSTCFLAGS   := $(KBUILD_USERCFLAGS) $(HOST_LFS_CFLAGS) $(HOSTCFLAGS)
+KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
+KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+
+export KBUILD_HOSTCFLAGS KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS
 
 # CROSS_COMPILE specify the prefix used for all executables used
 # during compilation. Only gcc and related bin-utils executables
@@ -47,10 +57,7 @@ BASH   = bash
 KGZIP  = gzip
 KBZIP2 = bzip2
 
-KMAKEINCLUDE    := \
-		-I$(srctree)/include \
-		-I$(srctree)/arch/$(SRCARCH)/include \
-		-I$(objtree)/arch/$(SRCARCH)/include/generated
+KMAKEINCLUDE := -I$(srctree)/include
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
@@ -58,11 +65,13 @@ KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
 		   -Werror=implicit-function-declaration -Werror=implicit-int \
 		   -Werror=return-type -Wno-format-security \
 		   -std=gnu89
+KBUILD_LDFLAGS :=
+OBJCOPYFLAGS = -O binary -R .comment -S
 
 NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
 
 export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC CROSS_COMPILE LD CC
 export CPP AR NM STRIP OBJCOPY OBJDUMP READELF LEX YACC
 export PERL MAKE UTS_MACHINE HOSTCXX
-export KGZIP KBZIP2
+export KGZIP KBZIP2 KBUILD_AFLAGS KBUILD_CFLAGS
 export KBUILD_CPPFLAGS NOSTDINC_FLAGS KMAKEINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
