@@ -23,3 +23,14 @@ ifneq ($(findstring s,$(filter-out --%,$(MAKEFLAGS))),)
 endif
 
 export quiet Q KBUILD_VERBOSE
+
+KBUILD_BUILTIN := 1
+export KBUILD_BUILTIN
+
+head-y :=
+core-y :=
+drivers-y :=
+libs-y :=
+
+KCONFIG_CONFIG ?= .config
+export KCONFIG_CONFIG

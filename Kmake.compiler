@@ -9,9 +9,6 @@ ARCH ?= $(SUBARCH)
 UTS_MACHINE := $(ARCH)
 SRCARCH     := $(ARCH)
 
-KCONFIG_CONFIG ?= .config
-export KCONFIG_CONFIG
-
 # SHELL used by kbuild
 CONFIG_SHELL := sh
 
